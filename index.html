@@ -3,28 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小卡漫劇場 第 6 集：紫霧大反擊（高密度連貫動畫版）</title>
+    <title>小卡漫劇場 第 6 集：紫霧大反擊</title>
     <style>
-        :root {
-            --stage-w: 960px;
-            --stage-h: 540px;
-            --purple-main: #9c27b0;
-            --purple-glow: #e040fb;
-            --dark-bg: #0a0314;
-            --cyan-glow: #00e5ff;
-            --yellow-gold: #ffd600;
-            --danger-red: #ff1744;
-        }
-
-        * {
-            box-sizing: border-box;
-            user-select: none;
-        }
-
         body {
-            background-color: #05010a;
+            background-color: #08030f;
             color: #ffffff;
-            font-family: 'Microsoft JhengHei', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -34,634 +18,324 @@
             overflow: hidden;
         }
 
-        .header-panel {
-            text-align: center;
-            margin-bottom: 15px;
+        h2 {
+            color: #d154ff;
+            margin-bottom: 8px;
+            font-size: 22px;
         }
 
-        .header-panel h1 {
-            margin: 0;
-            font-size: 28px;
-            color: var(--purple-glow);
-            text-shadow: 0 0 20px var(--purple-glow), 0 0 40px var(--purple-main);
-            letter-spacing: 2px;
-        }
-
-        .header-panel p {
-            margin: 5px 0 0;
-            font-size: 14px;
-            color: #b39ddb;
-        }
-
-        /* 主動畫容器 */
-        .viewport {
-            width: var(--stage-w);
-            height: var(--stage-h);
-            background-color: var(--dark-bg);
-            border: 4px solid var(--purple-glow);
-            border-radius: 20px;
+        /* 舒適的標準舞臺大小 (850px x 480px) */
+        .stage {
+            width: 850px;
+            height: 480px;
+            background: linear-gradient(135deg, #1f0a33, #4a154b);
+            border: 4px solid #d154ff;
+            border-radius: 15px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 0 50px rgba(156, 39, 176, 0.4), inset 0 0 30px rgba(0,0,0,0.8);
+            box-shadow: 0 10px 30px rgba(209, 84, 255, 0.4);
+            transition: transform 0.3s ease;
         }
 
-        /* 鏡頭系統 */
-        .camera-rig {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            transform-origin: center center;
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        /* 背景畫布與分層 */
-        .layer-bg {
-            position: absolute;
-            width: 120%;
-            height: 120%;
-            top: -10%;
-            left: -10%;
-            background: radial-gradient(circle at 50% 40%, #2a0845 0%, #0a0314 80%);
-        }
-
-        .stars-particle {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(2px 2px at 20px 30px, #fff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 150px 120px, var(--purple-glow), rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 300px 240px, #fff, rgba(0,0,0,0)),
-                radial-gradient(3px 3px at 450px 80px, var(--cyan-glow), rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 600px 320px, #fff, rgba(0,0,0,0)),
-                radial-gradient(3px 3px at 780px 150px, var(--yellow-gold), rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 880px 400px, #fff, rgba(0,0,0,0));
-            background-size: 900px 500px;
-            animation: starsMove 20s linear infinite;
-        }
-
-        @keyframes starsMove {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-500px); }
-        }
-
-        .fog-flow {
-            position: absolute;
-            width: 200%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(224, 64, 251, 0.12), transparent, rgba(0, 229, 255, 0.08), transparent);
-            animation: fogLinear 15s linear infinite;
-        }
-
-        @keyframes fogLinear {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        /* 地形舞台 */
-        .stage-floor {
+        .ground {
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 120px;
-            background: linear-gradient(180deg, #18052e 0%, #05010a 100%);
-            border-top: 3px solid var(--purple-glow);
-            box-shadow: 0 -15px 30px rgba(224, 64, 251, 0.3);
+            height: 80px;
+            background-color: #0d0317;
+            border-top: 4px solid #d154ff;
         }
 
-        .grid-line {
+        /* 角色圖層 */
+        .actor {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(to right, rgba(224, 64, 251, 0.15) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(224, 64, 251, 0.15) 1px, transparent 1px);
-            background-size: 40px 25px;
+            bottom: 110px;
+            font-size: 65px;
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 5;
         }
 
-        /* SVG 向量角色與元件樣式 */
-        .character {
+        .actor-pipi { left: 100px; }
+        .actor-monster { left: 180px; }
+        .actor-enemy { right: 100px; transform: scaleX(-1); opacity: 0; }
+
+        /* 特效元件 */
+        .dark-beam {
             position: absolute;
-            bottom: 100px;
-            width: 120px;
-            height: 140px;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            bottom: 140px;
+            right: 170px;
+            width: 0px;
+            height: 45px;
+            background: linear-gradient(90deg, #ff0055, #d154ff, #ffffff);
+            box-shadow: 0 0 25px #ff0055, 0 0 40px #d154ff;
+            border-radius: 20px;
+            opacity: 0;
+            transition: width 0.3s ease-out, opacity 0.2s ease;
+            z-index: 6;
+        }
+
+        .cookie-shield {
+            position: absolute;
+            bottom: 110px;
+            left: 240px;
+            font-size: 70px;
+            opacity: 0;
+            transform: scale(0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 7;
+        }
+
+        /* 漫畫風格對話框 */
+        .speech-bubble {
+            position: absolute;
+            background: #ffffff;
+            color: #000000;
+            padding: 10px 16px;
+            border-radius: 18px;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4), 0 0 0 2px #000;
+            max-width: 260px;
+            display: none;
             z-index: 10;
         }
 
-        #charPipi { left: 140px; }
-        #charMonster { left: 260px; }
-        #charEnemy { right: 140px; transform: scaleX(-1); }
+        .bubble-pipi { bottom: 190px; left: 80px; }
+        .bubble-monster { bottom: 190px; left: 160px; }
+        .bubble-enemy { bottom: 190px; right: 80px; }
 
-        /* 特效圖層 */
-        .fx-layer {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 15;
-        }
-
-        /* 敵數大將暗黑聚能球 */
-        .dark-energy-ball {
-            position: absolute;
-            bottom: 160px;
-            right: 240px;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: radial-gradient(circle, #fff 0%, var(--danger-red) 40%, var(--purple-main) 80%, transparent 100%);
-            box-shadow: 0 0 30px var(--danger-red), 0 0 60px var(--purple-glow);
-            opacity: 0;
-            transform: scale(0.1);
-            transition: all 0.6s ease;
-        }
-
-        /* 暗黑破滅光束 */
-        .dark-laser {
-            position: absolute;
-            bottom: 145px;
-            right: 250px;
-            width: 0px;
-            height: 50px;
-            background: linear-gradient(90deg, var(--danger-red), var(--purple-glow), #fff);
-            box-shadow: 0 0 25px var(--danger-red), 0 0 50px var(--purple-glow);
-            border-radius: 25px;
-            opacity: 0;
-            transition: width 0.4s ease-out, opacity 0.2s ease;
-        }
-
-        /* 小怪獸餅乾防禦壁 (Cookie Shield System) */
-        .cookie-shield-barrier {
-            position: absolute;
-            bottom: 110px;
-            left: 310px;
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            border: 4px dashed var(--yellow-gold);
-            background: radial-gradient(circle, rgba(255, 214, 0, 0.35) 0%, rgba(255, 111, 0, 0.15) 70%, transparent 100%);
-            box-shadow: 0 0 35px var(--yellow-gold), inset 0 0 20px var(--yellow-gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transform: scale(0.2) rotate(0deg);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .cookie-icon {
-            width: 70px;
-            height: 70px;
-            filter: drop-shadow(0 0 10px rgba(255,214,0,0.8));
-        }
-
-        /* 衝擊波護盾閃光 */
-        .impact-spark {
-            position: absolute;
-            bottom: 130px;
-            left: 380px;
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle, #fff 0%, var(--cyan-glow) 50%, transparent 100%);
-            opacity: 0;
-            transform: scale(0.1);
-            transition: all 0.2s ease-out;
-        }
-
-        /* 對話框系統 */
-        .dialog-bubble {
-            position: absolute;
-            background: #ffffff;
-            color: #0d0314;
-            padding: 14px 22px;
-            border-radius: 25px;
-            font-size: 18px;
-            font-weight: 800;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6), 0 0 0 4px #0d0314;
-            max-width: 320px;
-            opacity: 0;
-            transform: translateY(20px) scale(0.8);
-            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 30;
-            pointer-events: none;
-        }
-
-        .dialog-bubble::after {
-            content: '';
-            position: absolute;
-            bottom: -14px;
-            left: 35px;
-            border-width: 14px 14px 0;
-            border-style: solid;
-            border-color: #ffffff transparent;
-            display: block;
-            width: 0;
-        }
-
-        .bubble-pipi { bottom: 250px; left: 110px; }
-        .bubble-monster { bottom: 250px; left: 230px; }
-        .bubble-enemy { bottom: 260px; right: 120px; }
-        .bubble-enemy::after { left: auto; right: 35px; }
-
-        .bubble-active {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        /* 片尾畫面 */
-        .screen-overlay {
+        /* 片尾過場畫面 */
+        .ending-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 1, 10, 0.94);
+            background: rgba(0, 0, 0, 0.88);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 1.2s ease;
-            z-index: 50;
+            transition: opacity 1s ease;
+            z-index: 20;
         }
 
-        .title-ep {
-            font-size: 42px;
-            color: var(--cyan-glow);
-            font-weight: 900;
-            margin-bottom: 15px;
-            text-shadow: 0 0 30px var(--cyan-glow);
-            letter-spacing: 3px;
+        .ending-title {
+            font-size: 32px;
+            color: #00f0ff;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
         }
 
-        .sub-ep {
-            font-size: 22px;
-            color: var(--yellow-gold);
-            font-weight: 700;
-            text-shadow: 0 0 15px var(--yellow-gold);
+        .ending-sub {
+            font-size: 18px;
+            color: #ffcc00;
         }
 
-        /* 鏡頭震動特效 */
-        .shake-effect {
-            animation: rigShake 0.4s ease-in-out infinite;
-        }
-
-        @keyframes rigShake {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            20% { transform: translate(-10px, 8px) rotate(-1.5deg); }
-            40% { transform: translate(8px, -8px) rotate(1.5deg); }
-            60% { transform: translate(-6px, -4px) rotate(-0.5deg); }
-            80% { transform: translate(6px, 6px) rotate(0.5deg); }
-            100% { transform: translate(0, 0) rotate(0deg); }
-        }
-
-        /* 底部操作面板 */
-        .controls {
-            margin-top: 18px;
+        /* 控制面板 */
+        .control-panel {
+            margin-top: 15px;
             display: flex;
-            gap: 20px;
+            gap: 15px;
             align-items: center;
         }
 
-        .btn-action {
-            background: linear-gradient(135deg, var(--purple-glow), var(--purple-main));
+        .btn-replay {
+            background: linear-gradient(135deg, #d154ff, #8e24aa);
             border: none;
             color: white;
-            padding: 12px 28px;
-            border-radius: 30px;
-            font-size: 16px;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 5px 20px rgba(224, 64, 251, 0.4);
-            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(209, 84, 255, 0.4);
         }
 
-        .btn-action:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(224, 64, 251, 0.6);
+        .btn-replay:hover {
+            transform: scale(1.05);
         }
 
-        .status-badge {
-            color: var(--cyan-glow);
+        .status-text {
+            color: #00f0ff;
+            font-size: 14px;
             font-family: monospace;
-            font-size: 15px;
-            background: rgba(0, 229, 255, 0.1);
-            padding: 6px 16px;
-            border-radius: 20px;
-            border: 1px solid var(--cyan-glow);
+        }
+
+        /* 畫面微幅震動 */
+        .stage-shake {
+            animation: stageShake 0.35s ease-in-out infinite;
+        }
+
+        @keyframes stageShake {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-6px, 4px); }
+            50% { transform: translate(5px, -5px); }
+            75% { transform: translate(-4px, -3px); }
+            100% { transform: translate(0, 0); }
         }
     </style>
 </head>
 <body>
 
-    <div class="header-panel">
-        <h1>《小卡漫劇場》第 6 集：紫霧大反擊！</h1>
-        <p>第一故事：紫霧廢墟 (下集) ── 高密度連貫分鏡動畫</p>
-    </div>
+    <h2>小卡漫劇場 第 6 集：故事一（下）紫霧大反擊</h2>
 
-    <div class="viewport">
-        <div id="cameraRig" class="camera-rig">
-            <!-- 背景與星空 -->
-            <div class="layer-bg"></div>
-            <div class="stars-particle"></div>
-            <div class="fog-flow"></div>
-            
-            <!-- 舞台地板 -->
-            <div class="stage-floor">
-                <div class="grid-line"></div>
-            </div>
+    <div id="stage" class="stage">
+        <div class="ground"></div>
+        
+        <!-- 敵數大將 -->
+        <div id="enemy" class="actor actor-enemy">👾🏴‍☠️</div>
 
-            <!-- 特效元件 -->
-            <div class="fx-layer">
-                <div id="darkBall" class="dark-energy-ball"></div>
-                <div id="darkLaser" class="dark-laser"></div>
-                <div id="cookieBarrier" class="cookie-shield-barrier">
-                    <svg class="cookie-icon" viewBox="0 0 100 100">
-                        <circle cx="50" cy="50" r="45" fill="#d7ccc8" stroke="#8d6e63" stroke-width="5"/>
-                        <circle cx="35" cy="35" r="7" fill="#4e342e"/>
-                        <circle cx="65" cy="40" r="8" fill="#4e342e"/>
-                        <circle cx="50" cy="65" r="6" fill="#4e342e"/>
-                        <circle cx="30" cy="65" r="6" fill="#4e342e"/>
-                        <circle cx="70" cy="68" r="5" fill="#4e342e"/>
-                    </svg>
-                </div>
-                <div id="impactSpark" class="impact-spark"></div>
-            </div>
+        <!-- 角色區：皮皮與小怪獸 -->
+        <div id="pipi" class="actor actor-pipi">👦</div>
+        <div id="monster" class="actor actor-monster">👾</div>
 
-            <!-- 向量角色圖層 (SVG 繪製) -->
-            <!-- 1. 皮皮 (👦/😢/😄) -->
-            <div id="charPipi" class="character">
-                <svg viewBox="0 0 100 120" width="100%" height="100%">
-                    <!-- 身體 -->
-                    <rect x="30" y="60" width="40" height="50" rx="10" fill="#29b6f6"/>
-                    <!-- 頭部 -->
-                    <circle cx="50" cy="40" r="30" fill="#ffcc80"/>
-                    <!-- 頭髮 -->
-                    <path d="M20 35 Q50 10 80 35 Q50 20 20 35 Z" fill="#5d4037"/>
-                    <!-- 眼睛 (預設笑眼) -->
-                    <g id="pipiEyesHappy">
-                        <circle cx="40" cy="38" r="4" fill="#212121"/>
-                        <circle cx="60" cy="38" r="4" fill="#212121"/>
-                    </g>
-                    <!-- 傷心眼 (😢 狀態) -->
-                    <g id="pipiEyesSad" style="display:none;">
-                        <path d="M35 42 Q40 36 45 42" stroke="#212121" stroke-width="3" fill="none"/>
-                        <path d="M55 42 Q60 36 65 42" stroke="#212121" stroke-width="3" fill="none"/>
-                        <!-- 淚珠 -->
-                        <path d="M32 45 Q30 52 34 52 Q38 52 36 45 Z" fill="#00e5ff"/>
-                    </g>
-                    <!-- 嘴巴 -->
-                    <path id="pipiMouth" d="M42 50 Q50 58 58 50" stroke="#212121" stroke-width="3" fill="none"/>
-                </svg>
-            </div>
+        <!-- 攻擊特效 -->
+        <div id="darkBeam" class="dark-beam"></div>
+        <div id="cookieShield" class="cookie-shield">🍪</div>
+        
+        <!-- 漫畫對話框 -->
+        <div id="bubblePipi" class="speech-bubble bubble-pipi"></div>
+        <div id="bubbleMonster" class="speech-bubble bubble-monster"></div>
+        <div id="bubbleEnemy" class="speech-bubble bubble-enemy"></div>
 
-            <!-- 2. 小怪獸 (👾 招牌酷表情，永遠不變) -->
-            <div id="charMonster" class="character">
-                <svg viewBox="0 0 100 120" width="100%" height="100%">
-                    <!-- 怪獸身體 -->
-                    <rect x="20" y="30" width="60" height="70" rx="20" fill="#ab47bc"/>
-                    <!-- 小角 -->
-                    <polygon points="30,30 25,10 40,25" fill="#7b1fa2"/>
-                    <polygon points="70,30 75,10 60,25" fill="#7b1fa2"/>
-                    <!-- 大招牌單眼或雙眼 (酷酷無表情) -->
-                    <circle cx="50" cy="55" r="16" fill="#fff"/>
-                    <circle cx="50" cy="55" r="7" fill="#212121"/>
-                    <!-- 直線嘴巴 (無表情) -->
-                    <line x1="40" y1="80" x2="60" y2="80" stroke="#212121" stroke-width="4" stroke-linecap="round"/>
-                </svg>
-            </div>
-
-            <!-- 3. 敵數大將 (👾🏴‍☠️) -->
-            <div id="charEnemy" class="character">
-                <svg viewBox="0 0 100 120" width="100%" height="100%">
-                    <rect x="15" y="25" width="70" height="80" rx="15" fill="#37474f"/>
-                    <!-- 煞氣黑角 -->
-                    <polygon points="20,25 10,0 35,20" fill="#212121"/>
-                    <polygon points="80,25 90,0 65,20" fill="#212121"/>
-                    <!-- 紅色邪惡眼睛 -->
-                    <polygon points="30,45 45,52 30,55" fill="#ff1744"/>
-                    <polygon points="70,45 55,52 70,55" fill="#ff1744"/>
-                    <!-- 尖牙嘴巴 -->
-                    <path d="M35 75 L42 85 L50 75 L58 85 L65 75 Z" fill="#b0bec5"/>
-                </svg>
-            </div>
-
-            <!-- 對話氣泡 -->
-            <div id="msgPipi" class="dialog-bubble bubble-pipi"></div>
-            <div id="msgMonster" class="dialog-bubble bubble-monster"></div>
-            <div id="msgEnemy" class="dialog-bubble bubble-enemy"></div>
-        </div>
-
-        <!-- 結尾過場畫面 -->
-        <div id="screenOverlay" class="screen-overlay">
-            <div class="title-ep">🌟 第 6 集 完結 🌟</div>
-            <div class="sub-ep">第一個故事圓滿成功！準備進入【第二故事】尋找第一片掉落碎片！</div>
+        <!-- 片尾畫面 -->
+        <div id="endingScreen" class="ending-overlay">
+            <div class="ending-title">🌟 第 6 集 完結 🌟</div>
+            <div class="ending-sub">第一故事圓滿過關！準備前往第二故事尋找第一片掉落碎片！</div>
         </div>
     </div>
 
-    <div class="controls">
-        <button class="btn-action" onclick="replayScene()">🔁 重新播放動畫分鏡</button>
-        <div id="statusBadge" class="status-badge">分鏡時間軸加載中...</div>
+    <div class="control-panel">
+        <button class="btn-replay" onclick="playAnimation()">🔁 重新播放動畫</button>
+        <span id="statusText" class="status-text">動畫播放中...</span>
     </div>
 
 <script>
-    // 取得元件
-    const cameraRig = document.getElementById('cameraRig');
-    const charPipi = document.getElementById('charPipi');
-    const charMonster = document.getElementById('charMonster');
-    const charEnemy = document.getElementById('charEnemy');
+    const stage = document.getElementById('stage');
+    const pipi = document.getElementById('pipi');
+    const monster = document.getElementById('monster');
+    const enemy = document.getElementById('enemy');
+    const darkBeam = document.getElementById('darkBeam');
+    const cookieShield = document.getElementById('cookieShield');
+    
+    const bubblePipi = document.getElementById('bubblePipi');
+    const bubbleMonster = document.getElementById('bubbleMonster');
+    const bubbleEnemy = document.getElementById('bubbleEnemy');
+    const endingScreen = document.getElementById('endingScreen');
+    const statusText = document.getElementById('statusText');
 
-    const pipiEyesHappy = document.getElementById('pipiEyesHappy');
-    const pipiEyesSad = document.getElementById('pipiEyesSad');
-    const pipiMouth = document.getElementById('pipiMouth');
+    let timers = [];
 
-    const msgPipi = document.getElementById('msgPipi');
-    const msgMonster = document.getElementById('msgMonster');
-    const msgEnemy = document.getElementById('msgEnemy');
-
-    const darkBall = document.getElementById('darkBall');
-    const darkLaser = document.getElementById('darkLaser');
-    const cookieBarrier = document.getElementById('cookieBarrier');
-    const impactSpark = document.getElementById('impactSpark');
-    const screenOverlay = document.getElementById('screenOverlay');
-    const statusBadge = document.getElementById('statusBadge');
-
-    let timelineIds = [];
-
-    function setBubble(el, text) {
-        clearBubbles();
-        el.innerText = text;
-        el.classList.add('bubble-active');
+    function hideAllBubbles() {
+        bubblePipi.style.display = 'none';
+        bubbleMonster.style.display = 'none';
+        bubbleEnemy.style.display = 'none';
     }
 
-    function clearBubbles() {
-        msgPipi.classList.remove('bubble-active');
-        msgMonster.classList.remove('bubble-active');
-        msgEnemy.classList.remove('bubble-active');
-    }
-
-    function setPipiExpression(state) {
-        if (state === 'sad') {
-            pipiEyesHappy.style.display = 'none';
-            pipiEyesSad.style.display = 'block';
-            pipiMouth.setAttribute('d', 'M42 58 Q50 50 58 58'); // 倒彎嘴
-        } else {
-            pipiEyesHappy.style.display = 'block';
-            pipiEyesSad.style.display = 'none';
-            pipiMouth.setAttribute('d', 'M42 50 Q50 58 58 50'); // 笑嘴
-        }
-    }
-
-    // 核心流暢分鏡時間軸 (7 大動漫分鏡場景)
-    function runAnimationTimeline() {
-        clearAllTimers();
-
-        // 0. 重置初始狀態
-        screenOverlay.style.opacity = '0';
-        cameraRig.className = 'camera-rig';
-        cameraRig.style.transform = 'scale(1) translate(0, 0)';
+    function playAnimation() {
+        // 清除舊計時器並重置畫面
+        timers.forEach(t => clearTimeout(t));
+        timers = [];
         
-        charPipi.style.transform = 'translateX(0)';
-        charMonster.style.transform = 'translateX(0)';
-        charEnemy.style.opacity = '1';
-        charEnemy.style.transform = 'scaleX(-1) translateX(0)';
+        endingScreen.style.opacity = '0';
+        stage.classList.remove('stage-shake');
+        stage.style.boxShadow = '0 10px 30px rgba(209, 84, 255, 0.4)';
+        
+        pipi.innerText = '👦';
+        pipi.style.transform = 'translateX(0)';
+        monster.style.transform = 'translateX(0)';
+        enemy.style.opacity = '1';
+        enemy.style.transform = 'scaleX(-1) translateX(0)';
 
-        setPipiExpression('happy');
+        darkBeam.style.width = '0px';
+        darkBeam.style.opacity = '0';
+        cookieShield.style.opacity = '0';
+        cookieShield.style.transform = 'scale(0.3)';
+        hideAllBubbles();
+        statusText.innerText = 'STATUS: 播放中...';
 
-        darkBall.style.opacity = '0';
-        darkBall.style.transform = 'scale(0.1)';
-        darkLaser.style.width = '0px';
-        darkLaser.style.opacity = '0';
+        // 1. 敵數大將現身發下狠話 (1.0s)
+        timers.push(setTimeout(() => {
+            hideAllBubbles();
+            bubbleEnemy.style.display = 'block';
+            bubbleEnemy.innerText = "哼！想贏我？沒那麼容易！看招！";
+            statusText.innerText = 'STATUS: 分鏡 1 - 敵數攻擊';
+        }, 1000));
 
-        cookieBarrier.style.opacity = '0';
-        cookieBarrier.style.transform = 'scale(0.2) rotate(0deg)';
-        impactSpark.style.opacity = '0';
+        // 2. 發射暗黑衝擊波，舞臺震動！(4.0s)
+        timers.push(setTimeout(() => {
+            hideAllBubbles();
+            darkBeam.style.opacity = '1';
+            darkBeam.style.width = '420px';
+            stage.classList.add('stage-shake');
+        }, 4000));
 
-        statusBadge.innerText = 'STATUS: 動畫分鏡 1 / 7（對峙中）';
+        // 3. 皮皮害怕變難過臉 (😢) (5.0s)
+        timers.push(setTimeout(() => {
+            pipi.innerText = '😢';
+            bubblePipi.style.display = 'block';
+            bubblePipi.innerText = "哇啊！攻擊好強，我們快被打飛了……！";
+        }, 5000));
 
-        // ----------------------------------------------------
-        // 分鏡 1：敵數大將登場威壓 (1.0s)
-        // ----------------------------------------------------
-        addTimer(() => {
-            cameraRig.style.transform = 'scale(1.1) translate(-40px, -10px)';
-            setBubble(msgEnemy, "哼！你們這兩個小鬼，別想活著離開紫霧廢墟！");
-        }, 1000);
+        // 4. 小怪獸表情不變 (👾)，挺身張開「餅乾防護罩」！(8.0s)
+        timers.push(setTimeout(() => {
+            hideAllBubbles();
+            monster.style.transform = 'translateX(60px)';
+            cookieShield.style.opacity = '1';
+            cookieShield.style.transform = 'scale(1.3)';
+            bubbleMonster.style.display = 'block';
+            bubbleMonster.innerText = "吼嚕嚕！皮皮別怕！餅乾防禦罩──反彈！";
+            statusText.innerText = 'STATUS: 分鏡 2 - 餅乾防護罩反擊';
+        }, 8000));
 
-        // ----------------------------------------------------
-        // 分鏡 2：敵數大將蓄積暗黑能量 (4.5s)
-        // ----------------------------------------------------
-        addTimer(() => {
-            statusBadge.innerText = 'STATUS: 動畫分鏡 2 / 7（敵數大將蓄能）';
-            setBubble(msgEnemy, "看我的終極絕招——暗黑破滅衝擊波！");
-            darkBall.style.opacity = '1';
-            darkBall.style.transform = 'scale(3)';
-        }, 4500);
+        // 5. 敵數大將被彈飛 (11.0s)
+        timers.push(setTimeout(() => {
+            darkBeam.style.width = '0px';
+            darkBeam.style.opacity = '0';
+            stage.classList.remove('stage-shake');
 
-        // ----------------------------------------------------
-        // 分鏡 3：發射雷射與皮皮變傷心臉 (8.0s)
-        // ----------------------------------------------------
-        addTimer(() => {
-            statusBadge.innerText = 'STATUS: 動畫分鏡 3 / 7（強襲危機！）';
-            clearBubbles();
-            darkBall.style.opacity = '0';
-            darkLaser.style.opacity = '1';
-            darkLaser.style.width = '500px';
+            enemy.style.transform = 'scaleX(-1) translateX(180px) rotate(45deg)';
+            enemy.style.opacity = '0';
+        }, 11000));
 
-            // 鏡頭劇烈震動
-            cameraRig.classList.add('shake-effect');
+        // 6. 勝利對話：皮皮恢復笑容，小怪獸想著餅乾 (13.5s)
+        timers.push(setTimeout(() => {
+            cookieShield.style.opacity = '0';
+            pipi.innerText = '😄';
+            bubblePipi.style.display = 'block';
+            bubblePipi.innerText = "太棒了！我們成功擊退敵數大將了！";
+            statusText.innerText = 'STATUS: 分鏡 3 - 勝利與對話';
+        }, 13500));
 
-            // 皮皮變傷心難過臉 (😢)
-            setPipiExpression('sad');
-            setBubble(msgPipi, "哇啊！攻擊太強了，我們擋不住的……！");
-        }, 8000);
+        // 7. 小怪獸招牌發言 (16.5s)
+        timers.push(setTimeout(() => {
+            hideAllBubbles();
+            bubbleMonster.style.display = 'block';
+            bubbleMonster.innerText = "吼嚕嚕……打贏了，但是壞人身上怎麼沒有餅乾呢？";
+        }, 16500));
 
-        // ----------------------------------------------------
-        // 分鏡 4：小怪獸挺身而出，展開招牌餅乾護盾！(11.5s)
-        // ----------------------------------------------------
-        addTimer(() => {
-            statusBadge.innerText = 'STATUS: 動畫分鏡 4 / 7（小怪獸張開餅乾護盾）';
-            
-            // 小怪獸依然維持酷酷的招牌臉，向前跨步
-            charMonster.style.transform = 'translateX(90px)';
-            setBubble(msgMonster, "吼嚕嚕！皮皮別怕！餅乾防禦壁──開啟！");
+        // 8. 準備前往第二個故事 (20.0s)
+        timers.push(setTimeout(() => {
+            hideAllBubbles();
+            bubblePipi.style.display = 'block';
+            bubblePipi.innerText = "走吧！我們去下一個故事，尋找第一片掉落的碎片！";
+        }, 20000));
 
-            cookieBarrier.style.opacity = '1';
-            cookieBarrier.style.transform = 'scale(1.2) rotate(360deg)';
-        }, 11500);
-
-        // ----------------------------------------------------
-        // 分鏡 5：衝擊波反彈！敵數大將被擊飛 (15.5s)
-        // ----------------------------------------------------
-        addTimer(() => {
-            statusBadge.innerText = 'STATUS: 動畫分鏡 5 / 7（絕地反擊！）';
-            clearBubbles();
-
-            // 護盾與雷射碰撞火花
-            impactSpark.style.opacity = '1';
-            impactSpark.style.transform = 'scale(2.5)';
-            
-            setTimeout(() => {
-                impactSpark.style.opacity = '0';
-                darkLaser.style.width = '0px';
-                cameraRig.classList.remove('shake-effect');
-
-                // 敵數大將被彈飛
-                charEnemy.style.transform = 'scaleX(-1) translate(-300px, -150px) rotate(180deg)';
-                charEnemy.style.opacity = '0';
-            }, 600);
-        }, 15500);
-
-        // ----------------------------------------------------
-        // 分鏡 6：勝利！皮皮恢復笑容，小怪獸碎碎唸餅乾 (18.5s)
-        // ----------------------------------------------------
-        addTimer(() => {
-            statusBadge.innerText = 'STATUS: 動畫分鏡 6 / 7（勝利對話）';
-            cookieBarrier.style.opacity = '0';
-            setPipiExpression('happy');
-
-            setBubble(msgPipi, "太棒了！小怪獸你好厲害！我們贏了！");
-        }, 18500);
-
-        addTimer(() => {
-            // 小怪獸招牌對話
-            setBubble(msgMonster, "吼嚕嚕……打贏了，但是壞人身上居然沒掉落半塊餅乾。");
-        }, 22500);
-
-        // ----------------------------------------------------
-        // 分鏡 7：預告第二故事與片尾過場 (26.5s)
-        // ----------------------------------------------------
-        addTimer(() => {
-            statusBadge.innerText = 'STATUS: 動畫分鏡 7 / 7（準備前往第二故事）';
-            setBubble(msgPipi, "沒關係！我們去第二個故事領域，一定能找到第一片掉落的碎片！");
-        }, 26500);
-
-        addTimer(() => {
-            clearBubbles();
-            screenOverlay.style.opacity = '1';
-            statusBadge.innerText = 'STATUS: 第 6 集 播放完畢';
-        }, 31000);
+        // 9. 片尾過場 (24.0s)
+        timers.push(setTimeout(() => {
+            hideAllBubbles();
+            stage.style.boxShadow = '0 0 40px #00f0ff';
+            endingScreen.style.opacity = '1';
+            statusText.innerText = 'STATUS: 第 6 集 播放完畢';
+        }, 24000));
     }
 
-    function addTimer(fn, delay) {
-        const id = setTimeout(fn, delay);
-        timelineIds.push(id);
-    }
-
-    function clearAllTimers() {
-        timelineIds.forEach(id => clearTimeout(id));
-        timelineIds = [];
-    }
-
-    function replayScene() {
-        runAnimationTimeline();
-    }
-
-    // 頁面載入完成後自動播放
-    window.onload = runAnimationTimeline;
+    // 頁面載入自動播放
+    window.onload = playAnimation;
 </script>
 </body>
 </html>
